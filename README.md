@@ -10,6 +10,8 @@ Github has a user-friendly API. It's well designed and familiarizing ourselves w
 
 ## Required Features
 
+**[Demo app](https://gallant-edison-972273.netlify.app/)**
+
 Practicing React with Github API to [list repository issues](https://developer.github.com/v3/issues/#list-repository-issues):
 
 - [x] There are no plan to remove class components from React, but the official website recommend trying Hooks in new code. So from now on, you should use function components with [Hooks](https://reactjs.org/docs/hooks-intro.html).

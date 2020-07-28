@@ -44,7 +44,7 @@ const App = () => {
         // console.log(link);
         const getTotalPage = link.match(/page=(\d+)&per_page=\d+>; rel="last"/);
         if (getTotalPage) {
-          setTotalPageNum(getTotalPage[1]);
+          setTotalPageNum(parseInt(getTotalPage[1]));
         }
         setIssues(data);
         setErrorMsg("");

@@ -7,11 +7,8 @@ const PaginationIssue = ({
   totalPageNum,
   setTotalPageNum,
 }) => {
-  const handleClick = (event) => {
-    if (event.target.value !== pageNum) {
-      console.log(event.target.value);
-      setPageNum(event.target.value);
-    }
+  const handleClick = (page) => {
+    setPageNum(parseInt(page));
   };
 
   const handleClickOnFirst = () => {
@@ -36,22 +33,20 @@ const PaginationIssue = ({
     <Pagination size="lg" className="justify-content-center">
       <Pagination.First disabled={pageNum === 1} onClick={handleClickOnFirst} />
       <Pagination.Prev disabled={pageNum === 1} onClick={handleClickOnPrev} />
-      <Pagination.Item active={pageNum === 1} onClick={handleClick}>
+      <Pagination.Item active={pageNum === 1} onClick={() => handleClick(1)}>
         {1}
       </Pagination.Item>
 
       {pageNum - 1 > 1 ? <Pagination.Ellipsis /> : null}
       {pageNum > 1 && pageNum < totalPageNum ? (
-        <Pagination.Item active onClick={handleClick}>
-          {pageNum}
-        </Pagination.Item>
+        <Pagination.Item active>{pageNum}</Pagination.Item>
       ) : null}
       {totalPageNum > pageNum + 1 ? <Pagination.Ellipsis /> : null}
 
       {totalPageNum > 1 ? (
         <Pagination.Item
           active={pageNum === totalPageNum}
-          onClick={handleClick}
+          onClick={() => handleClick(totalPageNum)}
         >
           {totalPageNum}
         </Pagination.Item>
