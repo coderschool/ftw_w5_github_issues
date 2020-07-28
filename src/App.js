@@ -29,6 +29,9 @@ const App = () => {
   };
 
   const fetchIssueData = async () => {
+    if (!searchTerm) {
+      return;
+    }
     try {
       setLoading(true);
       const { owner, repo } = getOwnerAndRepo();
@@ -38,7 +41,7 @@ const App = () => {
       const data = await response.json();
       if (response.status === 200) {
         const link = response.headers.get("link");
-        console.log(link);
+        // console.log(link);
         const getTotalPage = link.match(/page=(\d+)&per_page=\d+>; rel="last"/);
         if (getTotalPage) {
           setTotalPageNum(getTotalPage[1]);
@@ -89,9 +92,8 @@ const App = () => {
   };
 
   useEffect(() => {
-    if (searchTerm) {
-      fetchIssueData();
-    }
+    fetchIssueData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageNum]);
 
   return (
