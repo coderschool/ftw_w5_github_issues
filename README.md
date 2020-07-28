@@ -1,68 +1,112 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Weekly project: Github Issues
 
-## Available Scripts
+**Team project**: up to two members each team.
 
-In the project directory, you can run:
+## Introduction
 
-### `npm start`
+Github has a user-friendly API. It's well designed and familiarizing ourselves with it is a good way to get started on one day building out own APIs.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+>Note: The GitHub API is cool because it allows unauthenticated access. However, the rate is severely limited - 60 an hour, which you might exceed while testing. 
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## Required Features
 
-### `npm test`
+Practicing React with Github API to [list repository issues](https://developer.github.com/v3/issues/#list-repository-issues):
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- [x] There are no plan to remove class components from React, but the official website recommend trying Hooks in new code. So from now on, you should use function components with [Hooks](https://reactjs.org/docs/hooks-intro.html).
+- [x] The user can enter a repository in a search bar, click "search", and see the associated issues. The repository should be of the format `owner/repo-name`, e.g. `facebook/react`.
+- [x] If the repository does not exist, the user should see a proper error message.
+- [x] The user should be able to see the following information for each issue:
+  * Issue Title with Number of the issue
+  * Owner of the Issue
+  * Owner Avatar
+  * How long ago the issue was updated in a human-friendly format (e.g. 2 days ago) (Hint: [react-moment](https://www.npmjs.com/package/react-moment#installing))
+  * Body of the Issue
+  * Labels of the issue
+- [x] The user should be able to see multiple pages of results, by clicking a pagination control.
+- [x] The user should be able to see the body of the issue rendered in markdown. (Hint: [react-markdown](https://github.com/rexxars/react-markdown))
+- [x] If there is an error creating the issue (for example, the user not supplying all required parameters), there should be a nice error message to the user.
+- [x] The user can see more details (**[including comments](https://developer.github.com/v3/issues/comments/)**) in a modal that's opened by clicking on the title of the issue.
+- [x] Fetching is an asynchronous operation, so you should display a loading [spinner](https://www.npmjs.com/package/react-spinners) whenever the app loads data, and hide it once the corresponding API call has been completed.
+- [x] Input Fuzzy Matching: the user should be able to type in either https://github.com/facebook/react or facebook/react, BOTH should work.
 
-### `npm run build`
+## Implementation
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Setup project
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+- Initialize project
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+$ npx create-react-app github-issues
+$ cd github-issues
+$ npm i react-bootstrap bootstrap
+$ npm i moment react-moment
+$ npm i react-markdown react-spinners
+```
 
-### `npm run eject`
+- Add `import "bootstrap/dist/css/bootstrap.min.css";` in `App.js`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Project structure
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+How to structure large React apps into folders and files is a highly opinionated topic. There is no right way to do it. However, let set up conventions to structure our React projects.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- Wrap your components in `components/YOUR_COMPONENT_NAME/` folder:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+  ```
+  |- src\
+    |- components\
+      |- List\
+          |- index.js
+          |- List.module.css
+      |- IssueModal\
+      |- Pagination\
+      |- Search\
+    |- App.js
+    ...
+  ```
 
-## Learn More
+  ```javascript
+  // In src/components/List/index.js
+  import React from "react";
+  import styles from "./List.module.css";
+  ...
+  const List = ( ) => {
+    ...
+  }
+  export default List;
+  ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+  ```javascript
+  // In src/App.js
+  import List from "./components/List";
+  ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **[CSS Module in create-react-app](https://create-react-app.dev/docs/adding-a-css-modules-stylesheet)**: After you have setup your application with create-react-app (e.g. npx create-react-app my-app), you don't need to install anything else to make CSS modules work. However, you have to give your CSS files the "module" prefix prior the extension: e.g. `List.module.css`
 
-### Code Splitting
+  ```css
+  /* In src/components/List/List.module.css */
+  .avatar {
+    width: 128px;
+    height: 128px;
+  }
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+  .text-grey {
+    color: #657786;
+  }
+  ```
 
-### Analyzing the Bundle Size
+  Later on in your component:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+  ```javascript
+  import styles from "./List.module.css";
 
-### Making a Progressive Web App
+  // Then you can use css in your JSX like this
+  <span className={styles["text-grey"]}>...</span>
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+  // If you want to concatenate with other classes
+  <span className={`${styles["text-grey"]} mr-2`}>...</span>
 
-### Advanced Configuration
+  ```
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+  In case of the `avatar` style, you can retrieve it with `styles.avatar` too. However, for the other styles with dashes you need to retrieve them with strings from the object, e.g. `styles["text-grey"]`. 
 
-### Deployment
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify

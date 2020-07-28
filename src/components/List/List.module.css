@@ -1,0 +1,13 @@
+.issue:hover {
+  background: #c8ced3;
+  cursor: pointer;
+}
+
+.avatar {
+  width: 128px;
+  height: 128px;
+}
+
+.text-grey {
+  color: #657786;
+}
