@@ -4,9 +4,9 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Alert } from "react-bootstrap";
 import Search from "./components/Search";
-import List from "./components/List";
+import IssueList from "./components/IssueList";
 import IssueModal from "./components/IssueModal";
-import PaginationIssue from "./components/Pagination";
+import PaginationIssue from "./components/PaginationIssue";
 import ClipLoader from "react-spinners/ClipLoader";
 
 const App = () => {
@@ -14,7 +14,7 @@ const App = () => {
   const [issues, setIssues] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedIssue, setSelectedIssue] = useState(null);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingComments, setLoadingComments] = useState(false);
   const [pageNum, setPageNum] = useState(1);
@@ -47,7 +47,7 @@ const App = () => {
           setTotalPageNum(parseInt(getTotalPage[1]));
         }
         setIssues(data);
-        setErrorMsg("");
+        setErrorMsg(null);
       } else {
         setErrorMsg(data.message);
       }
@@ -79,7 +79,7 @@ const App = () => {
       const data = await response.json();
       if (response.status === 200) {
         setComments(data);
-        setErrorMsg("");
+        setErrorMsg(null);
       } else {
         setErrorMsg(data.message);
         setShowModal(false);
@@ -106,7 +106,7 @@ const App = () => {
           onSearchSubmit={handleSearch}
           loading={loading}
         />
-        {errorMsg ? <Alert variant="danger">{errorMsg}</Alert> : <div></div>}
+        {errorMsg && <Alert variant="danger">{errorMsg}</Alert>}
         <PaginationIssue
           pageNum={pageNum}
           setPageNum={setPageNum}
@@ -116,7 +116,7 @@ const App = () => {
         {loading ? (
           <ClipLoader color="#f86c6b" size={150} loading={loading} />
         ) : (
-          <List itemList={issues} handleClickIssue={showDetail} />
+          <IssueList itemList={issues} handleClickIssue={showDetail} />
         )}
         <IssueModal
           issue={selectedIssue}
