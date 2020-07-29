@@ -41,21 +41,23 @@ const IssueModal = ({
               <li>There are no comments of this issue</li>
             )}
           </ul>
-          {loadingComments ? (
-            <ClipLoader color="#f86c6b" size={75} loading={loadingComments} />
-          ) : (
-            <>
-              {!disableShowMore && (
-                <Button
-                  type="button"
-                  onClick={handleMore}
-                  disabled={disableShowMore}
-                >
-                  Show More
-                </Button>
-              )}
-            </>
-          )}
+          <div className="d-flex justify-content-center">
+            {loadingComments ? (
+              <ClipLoader color="#f86c6b" size={75} loading={loadingComments} />
+            ) : (
+              <>
+                {!disableShowMore && (
+                  <Button
+                    type="button"
+                    onClick={handleMore}
+                    disabled={disableShowMore}
+                  >
+                    Show More
+                  </Button>
+                )}
+              </>
+            )}
+          </div>
         </Modal.Body>
       </Modal>
     )
