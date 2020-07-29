@@ -34,9 +34,10 @@ const Item = ({ item, showDetail }) => {
           <span className={`${styles["text-grey"]} mr-2`}>
             @{item.user.login}
           </span>
-          <span className={styles["text-grey"]}>
+          <span className={`${styles["text-grey"]} mr-2`}>
             Last update: <Moment fromNow>{item.updated_at}</Moment>
           </span>
+          <span className={styles["text-grey"]}>Comment: {item.comments}</span>
           <p>
             {item.body.length <= 99
               ? item.body

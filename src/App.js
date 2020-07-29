@@ -15,6 +15,8 @@ const App = () => {
   const [repo, setRepo] = useState("");
   const [pageNum, setPageNum] = useState(1);
   const [totalPageNum, setTotalPageNum] = useState(1);
+  const [commentPageNum, setCommentPageNum] = useState(1);
+  const [commentTotalPageNum, setCommentTotalPageNum] = useState(1);
   const [urlFetchComments, setUrlFetchComments] = useState("");
   const [comments, setComments] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -78,7 +80,18 @@ const App = () => {
   const showDetail = (item) => {
     setShowModal(true);
     setSelectedIssue(item);
-    const url = `https://api.github.com/repos/${owner}/${repo}/issues/${item.number}/comments?page=1&per_page=10`;
+    const url = `https://api.github.com/repos/${owner}/${repo}/issues/${item.number}/comments?page=1&per_page=5`;
+    setCommentPageNum(1);
+    setCommentTotalPageNum(1);
+    setUrlFetchComments(url);
+  };
+
+  const handleMoreComments = () => {
+    if (commentPageNum >= commentTotalPageNum) return;
+    const url = `https://api.github.com/repos/${owner}/${repo}/issues/${
+      selectedIssue.number
+    }/comments?page=${commentPageNum + 1}&per_page=5`;
+    setCommentPageNum((num) => num + 1);
     setUrlFetchComments(url);
   };
 
@@ -90,7 +103,16 @@ const App = () => {
         const response = await fetch(urlFetchComments);
         const data = await response.json();
         if (response.status === 200) {
-          setComments(data);
+          const link = response.headers.get("link");
+          if (link) {
+            const getTotalPage = link.match(
+              /page=(\d+)&per_page=\d+>; rel="last"/
+            );
+            if (getTotalPage) {
+              setCommentTotalPageNum(parseInt(getTotalPage[1]));
+            }
+          }
+          setComments([...comments, ...data]);
           setErrorMsg(null);
         } else {
           setErrorMsg(data.message);
@@ -133,6 +155,8 @@ const App = () => {
           loadingComments={loadingComments}
           showModal={showModal}
           setShowModal={setShowModal}
+          handleMore={handleMoreComments}
+          disableShowMore={commentPageNum === commentTotalPageNum}
         />
       </Container>
     </div>

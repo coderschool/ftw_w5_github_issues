@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Media } from "react-bootstrap";
+import { Modal, Media, Button } from "react-bootstrap";
 import styles from "./IssueModal.module.css";
 import ReactMarkdown from "react-markdown";
 import Moment from "react-moment";
@@ -11,6 +11,8 @@ const IssueModal = ({
   loadingComments,
   showModal,
   setShowModal,
+  handleMore,
+  disableShowMore,
 }) => {
   return (
     issue && (
@@ -30,21 +32,29 @@ const IssueModal = ({
           <ReactMarkdown source={issue.body} />
           <hr />
           <h4>Comments:</h4>
-
+          <ul className="list-unstyled">
+            {comments && comments.length ? (
+              comments.map((comment) => (
+                <Comments key={comment.id} {...comment} />
+              ))
+            ) : (
+              <li>There are no comments of this issue</li>
+            )}
+          </ul>
           {loadingComments ? (
-            <div className="d-flex justify-content-center">
-              <ClipLoader color="#f86c6b" size={75} loading={loadingComments} />
-            </div>
+            <ClipLoader color="#f86c6b" size={75} loading={loadingComments} />
           ) : (
-            <ul className="list-unstyled">
-              {comments && comments.length ? (
-                comments.map((comment) => (
-                  <Comments key={comment.id} {...comment} />
-                ))
-              ) : (
-                <li>There are no comments of this issue</li>
+            <>
+              {!disableShowMore && (
+                <Button
+                  type="button"
+                  onClick={handleMore}
+                  disabled={disableShowMore}
+                >
+                  Show More
+                </Button>
               )}
-            </ul>
+            </>
           )}
         </Modal.Body>
       </Modal>
