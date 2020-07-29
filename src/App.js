@@ -80,9 +80,10 @@ const App = () => {
   const showDetail = (item) => {
     setShowModal(true);
     setSelectedIssue(item);
-    const url = `https://api.github.com/repos/${owner}/${repo}/issues/${item.number}/comments?page=1&per_page=5`;
     setCommentPageNum(1);
     setCommentTotalPageNum(1);
+    setComments([]);
+    const url = `https://api.github.com/repos/${owner}/${repo}/issues/${item.number}/comments?page=1&per_page=5`;
     setUrlFetchComments(url);
   };
 
