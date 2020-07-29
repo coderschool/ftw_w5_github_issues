@@ -112,7 +112,7 @@ const App = () => {
               setCommentTotalPageNum(parseInt(getTotalPage[1]));
             }
           }
-          setComments([...comments, ...data]);
+          setComments((c) => [...c, ...data]);
           setErrorMsg(null);
         } else {
           setErrorMsg(data.message);

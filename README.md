@@ -29,7 +29,7 @@ Practicing React with Github API to [list repository issues](https://developer.g
 - [x] The user should be able to see the body of the issue rendered in markdown. (Hint: [react-markdown](https://github.com/rexxars/react-markdown))
 - [x] Fetching is an asynchronous operation, so you should display a loading [spinner](https://www.npmjs.com/package/react-spinners) whenever the app loads data, and hide it once the corresponding API call has been completed.
 - [x] Input Fuzzy Matching: the user should be able to type in either https://github.com/facebook/react or facebook/react, BOTH should work.
-- [x] In the Issue Detail Modal, let implement an **infinite pagination** with a "Show More" button. Fetch 5 more comments whenever user clicks on the button.
+- [x] In the Issue Detail Modal, let implement an **infinite pagination** with a "Show More" button: Fetch 5 more comments whenever user clicks on the button. The button is disabled or hidden when all the comments have been loaded.
 
 ## Implementation
 
