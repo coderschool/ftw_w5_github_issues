@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-// import logo from "./logo.svg";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Alert } from "react-bootstrap";
@@ -11,42 +10,45 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [url, setUrl] = useState("");
-  const [urlFetchComments, setUrlFetchComments] = useState("");
   const [issues, setIssues] = useState([]);
+  const [owner, setOwner] = useState("");
+  const [repo, setRepo] = useState("");
+  const [pageNum, setPageNum] = useState(1);
+  const [totalPageNum, setTotalPageNum] = useState(1);
+  const [urlFetchComments, setUrlFetchComments] = useState("");
+  const [comments, setComments] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedIssue, setSelectedIssue] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingComments, setLoadingComments] = useState(false);
-  const [pageNum, setPageNum] = useState(1);
-  const [totalPageNum, setTotalPageNum] = useState(1);
-  const [comments, setComments] = useState([]);
 
-  const getOwnerAndRepo = () => {
+  function getOwnerAndRepo() {
     const repo = searchTerm.substring(searchTerm.lastIndexOf("/") + 1);
     const withoutRepo = searchTerm.substring(0, searchTerm.lastIndexOf("/"));
     const owner = withoutRepo.substring(withoutRepo.lastIndexOf("/") + 1);
     return { repo, owner };
-  };
+  }
 
   const handleSearchInput = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const handleSearchSubmit = async (event) => {
+  const handleSearchSubmit = (event) => {
     const { owner, repo } = getOwnerAndRepo();
-    setUrl(
-      `https://api.github.com/repos/${owner}/${repo}/issues?page=${pageNum}&per_page=20`
-    );
+    setOwner(owner);
+    setRepo(repo);
+    setPageNum(1);
+    setTotalPageNum(1);
     event.preventDefault();
   };
 
   useEffect(() => {
     const fetchIssueData = async () => {
-      if (!url) return;
+      if (!owner || !repo) return;
       try {
         setLoading(true);
+        const url = `https://api.github.com/repos/${owner}/${repo}/issues?page=${pageNum}&per_page=20`;
         const response = await fetch(url);
         const data = await response.json();
         if (response.status === 200) {
@@ -66,18 +68,16 @@ const App = () => {
         }
         setLoading(false);
       } catch (error) {
-        console.log(url);
         setErrorMsg(`FETCH ISSUES ERROR: ${error.message}`);
         setLoading(false);
       }
     };
     fetchIssueData();
-  }, [url]);
+  }, [owner, repo, pageNum]);
 
-  const showDetail = async (item) => {
+  const showDetail = (item) => {
     setShowModal(true);
     setSelectedIssue(item);
-    const { owner, repo } = getOwnerAndRepo();
     const url = `https://api.github.com/repos/${owner}/${repo}/issues/${item.number}/comments?page=1&per_page=10`;
     setUrlFetchComments(url);
   };
