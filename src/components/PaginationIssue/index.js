@@ -1,12 +1,7 @@
 import React from "react";
 import { Pagination } from "react-bootstrap";
 
-const PaginationIssue = ({
-  pageNum,
-  setPageNum,
-  totalPageNum,
-  setTotalPageNum,
-}) => {
+const PaginationIssue = ({ pageNum, setPageNum, totalPageNum }) => {
   const handleClick = (page) => {
     setPageNum(parseInt(page));
   };

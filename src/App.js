@@ -11,6 +11,8 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [url, setUrl] = useState("");
+  const [urlFetchComments, setUrlFetchComments] = useState("");
   const [issues, setIssues] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedIssue, setSelectedIssue] = useState(null);
@@ -28,73 +30,81 @@ const App = () => {
     return { repo, owner };
   };
 
-  const fetchIssueData = async () => {
-    if (!searchTerm) {
-      return;
-    }
-    try {
-      setLoading(true);
-      const { owner, repo } = getOwnerAndRepo();
-      const url = `https://api.github.com/repos/${owner}/${repo}/issues?page=${pageNum}&per_page=20`;
-      const response = await fetch(url);
-      // console.log("response", response);
-      const data = await response.json();
-      if (response.status === 200) {
-        const link = response.headers.get("link");
-        // console.log(link);
-        const getTotalPage = link.match(/page=(\d+)&per_page=\d+>; rel="last"/);
-        if (getTotalPage) {
-          setTotalPageNum(parseInt(getTotalPage[1]));
-        }
-        setIssues(data);
-        setErrorMsg(null);
-      } else {
-        setErrorMsg(data.message);
-      }
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  };
-
   const handleSearchInput = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const handleSearch = async (event) => {
+  const handleSearchSubmit = async (event) => {
+    const { owner, repo } = getOwnerAndRepo();
+    setUrl(
+      `https://api.github.com/repos/${owner}/${repo}/issues?page=${pageNum}&per_page=20`
+    );
     event.preventDefault();
-    fetchIssueData();
-  };
-
-  const showDetail = async (item) => {
-    setSelectedIssue(item);
-    setShowModal(true);
-    try {
-      setLoadingComments(true);
-      const { owner, repo } = getOwnerAndRepo();
-      const url = `https://api.github.com/repos/${owner}/${repo}/issues/${item.number}/comments?page=1&per_page=10`;
-      const response = await fetch(url);
-      // console.log("response", response);
-      const data = await response.json();
-      if (response.status === 200) {
-        setComments(data);
-        setErrorMsg(null);
-      } else {
-        setErrorMsg(data.message);
-        setShowModal(false);
-      }
-      setLoadingComments(false);
-    } catch (error) {
-      console.log(error);
-      setLoadingComments(false);
-    }
   };
 
   useEffect(() => {
+    const fetchIssueData = async () => {
+      if (!url) return;
+      try {
+        setLoading(true);
+        const response = await fetch(url);
+        const data = await response.json();
+        if (response.status === 200) {
+          const link = response.headers.get("link");
+          if (link) {
+            const getTotalPage = link.match(
+              /page=(\d+)&per_page=\d+>; rel="last"/
+            );
+            if (getTotalPage) {
+              setTotalPageNum(parseInt(getTotalPage[1]));
+            }
+          }
+          setIssues(data);
+          setErrorMsg(null);
+        } else {
+          setErrorMsg(data.message);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.log(url);
+        setErrorMsg(`FETCH ISSUES ERROR: ${error.message}`);
+        setLoading(false);
+      }
+    };
     fetchIssueData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageNum]);
+  }, [url]);
+
+  const showDetail = async (item) => {
+    setShowModal(true);
+    setSelectedIssue(item);
+    const { owner, repo } = getOwnerAndRepo();
+    const url = `https://api.github.com/repos/${owner}/${repo}/issues/${item.number}/comments?page=1&per_page=10`;
+    setUrlFetchComments(url);
+  };
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      if (!urlFetchComments) return;
+      try {
+        setLoadingComments(true);
+        const response = await fetch(urlFetchComments);
+        const data = await response.json();
+        if (response.status === 200) {
+          setComments(data);
+          setErrorMsg(null);
+        } else {
+          setErrorMsg(data.message);
+          setShowModal(false);
+        }
+        setLoadingComments(false);
+      } catch (error) {
+        setErrorMsg(`FETCH COMMENTS ERROR: ${error.message}`);
+        setShowModal(false);
+        setLoadingComments(false);
+      }
+    };
+    fetchComments();
+  }, [urlFetchComments]);
 
   return (
     <div className="App">
@@ -103,7 +113,7 @@ const App = () => {
         <Search
           searchTerm={searchTerm}
           onSearch={handleSearchInput}
-          onSearchSubmit={handleSearch}
+          onSearchSubmit={handleSearchSubmit}
           loading={loading}
         />
         {errorMsg && <Alert variant="danger">{errorMsg}</Alert>}
@@ -111,12 +121,11 @@ const App = () => {
           pageNum={pageNum}
           setPageNum={setPageNum}
           totalPageNum={totalPageNum}
-          setTotalPageNum={setTotalPageNum}
         />
         {loading ? (
           <ClipLoader color="#f86c6b" size={150} loading={loading} />
         ) : (
-          <IssueList itemList={issues} handleClickIssue={showDetail} />
+          <IssueList itemList={issues} showDetail={showDetail} />
         )}
         <IssueModal
           issue={selectedIssue}

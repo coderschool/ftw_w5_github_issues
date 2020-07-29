@@ -3,22 +3,22 @@ import { Media } from "react-bootstrap";
 import styles from "./List.module.css";
 import Moment from "react-moment";
 
-const IssueList = ({ itemList, handleClickIssue }) => {
+const IssueList = ({ itemList, showDetail }) => {
   return (
     <ul className="list-unstyled">
       {itemList.map((item) => (
-        <Item item={item} key={item.id} handleClick={handleClickIssue} />
+        <Item item={item} key={item.id} showDetail={showDetail} />
       ))}
     </ul>
   );
 };
 
-const Item = ({ item, handleClick }) => {
+const Item = ({ item, showDetail }) => {
   return (
     <Media
       as="li"
       className={`${styles["issue"]} mb-5`}
-      onClick={() => handleClick(item)}
+      onClick={() => showDetail(item)}
     >
       <img
         src={item.user.avatar_url}
