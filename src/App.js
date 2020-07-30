@@ -37,19 +37,20 @@ const App = () => {
   };
 
   const handleSearchSubmit = (event) => {
+    event.preventDefault();
     const { owner, repo } = getOwnerAndRepo();
     setOwner(owner);
     setRepo(repo);
     setPageNum(1);
     setTotalPageNum(1);
-    event.preventDefault();
+    setIssues([]);
   };
 
   useEffect(() => {
     const fetchIssueData = async () => {
       if (!owner || !repo) return;
+      setLoading(true);
       try {
-        setLoading(true);
         const url = `https://api.github.com/repos/${owner}/${repo}/issues?page=${pageNum}&per_page=20`;
         const response = await fetch(url);
         const data = await response.json();
@@ -66,25 +67,27 @@ const App = () => {
           setIssues(data);
           setErrorMsg(null);
         } else {
-          setErrorMsg(data.message);
+          setErrorMsg(`FETCH ISSUES ERROR: ${data.message}`);
         }
-        setLoading(false);
       } catch (error) {
         setErrorMsg(`FETCH ISSUES ERROR: ${error.message}`);
-        setLoading(false);
       }
+      setLoading(false);
     };
     fetchIssueData();
   }, [owner, repo, pageNum]);
 
   const showDetail = (item) => {
     setShowModal(true);
-    setSelectedIssue(item);
-    setCommentPageNum(1);
-    setCommentTotalPageNum(1);
-    setComments([]);
-    const url = `https://api.github.com/repos/${owner}/${repo}/issues/${item.number}/comments?page=1&per_page=5`;
-    setUrlFetchComments(url);
+    if (selectedIssue?.number !== item.number) {
+      setComments([]);
+      setCommentPageNum(1);
+      setCommentTotalPageNum(1);
+      setSelectedIssue(item);
+      setUrlFetchComments(
+        `https://api.github.com/repos/${owner}/${repo}/issues/${item.number}/comments?page=1&per_page=5`
+      );
+    }
   };
 
   const handleMoreComments = () => {
@@ -99,8 +102,8 @@ const App = () => {
   useEffect(() => {
     const fetchComments = async () => {
       if (!urlFetchComments) return;
+      setLoadingComments(true);
       try {
-        setLoadingComments(true);
         const response = await fetch(urlFetchComments);
         const data = await response.json();
         if (response.status === 200) {
@@ -116,15 +119,14 @@ const App = () => {
           setComments((c) => [...c, ...data]);
           setErrorMsg(null);
         } else {
-          setErrorMsg(data.message);
+          setErrorMsg(`FETCH COMMENTS ERROR: ${data.message}`);
           setShowModal(false);
         }
-        setLoadingComments(false);
       } catch (error) {
         setErrorMsg(`FETCH COMMENTS ERROR: ${error.message}`);
         setShowModal(false);
-        setLoadingComments(false);
       }
+      setLoadingComments(false);
     };
     fetchComments();
   }, [urlFetchComments]);
