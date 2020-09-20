@@ -1,31 +1,37 @@
 import React from "react";
 import { Pagination } from "react-bootstrap";
 
-const PaginationIssue = ({ pageNum, setPageNum, totalPageNum }) => {
+const PaginationIssue = ({ pageNum, setPageNum, totalPageNum, loading }) => {
   const handleClick = (page) => {
-    setPageNum(parseInt(page));
+    if (!loading) {
+      setPageNum(parseInt(page));
+    }
   };
 
   const handleClickOnFirst = () => {
-    setPageNum(1);
+    if (!loading) {
+      setPageNum(1);
+    }
   };
 
   const handleClickOnLast = () => {
-    setPageNum(totalPageNum);
+    if (!loading) {
+      setPageNum(totalPageNum);
+    }
   };
   const handleClickOnNext = () => {
-    if (pageNum < totalPageNum) {
+    if (pageNum < totalPageNum && !loading) {
       setPageNum((num) => num + 1);
     }
   };
   const handleClickOnPrev = () => {
-    if (pageNum > 1) {
+    if (pageNum > 1 && !loading) {
       setPageNum((num) => num - 1);
     }
   };
 
   return (
-    <Pagination size="lg" className="justify-content-center">
+    <Pagination size="lg" className="justify-content-center" disabled={loading}>
       <Pagination.First disabled={pageNum === 1} onClick={handleClickOnFirst} />
       <Pagination.Prev disabled={pageNum === 1} onClick={handleClickOnPrev} />
       <Pagination.Item active={pageNum === 1} onClick={() => handleClick(1)}>

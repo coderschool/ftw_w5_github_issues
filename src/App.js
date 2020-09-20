@@ -47,6 +47,7 @@ const App = () => {
   };
 
   useEffect(() => {
+    console.log("Use Effect");
     const fetchIssueData = async () => {
       if (!owner || !repo) return;
       setLoading(true);
@@ -79,15 +80,15 @@ const App = () => {
 
   const showDetail = (item) => {
     setShowModal(true);
-    if (selectedIssue?.number !== item.number) {
-      setComments([]);
-      setCommentPageNum(1);
-      setCommentTotalPageNum(1);
-      setSelectedIssue(item);
-      setUrlFetchComments(
-        `https://api.github.com/repos/${owner}/${repo}/issues/${item.number}/comments?page=1&per_page=5`
-      );
-    }
+    // if (selectedIssue?.number !== item.number) {
+    setComments([]);
+    setCommentPageNum(1);
+    setCommentTotalPageNum(1);
+    setSelectedIssue(item);
+    setUrlFetchComments(
+      `https://api.github.com/repos/${owner}/${repo}/issues/${item.number}/comments?page=1&per_page=5`
+    );
+    // }
   };
 
   const handleMoreComments = () => {
@@ -101,7 +102,7 @@ const App = () => {
 
   useEffect(() => {
     const fetchComments = async () => {
-      if (!urlFetchComments) return;
+      if (!urlFetchComments && !showModal) return;
       setLoadingComments(true);
       try {
         const response = await fetch(urlFetchComments);
@@ -129,7 +130,7 @@ const App = () => {
       setLoadingComments(false);
     };
     fetchComments();
-  }, [urlFetchComments]);
+  }, [urlFetchComments, showModal]);
 
   return (
     <div className="App">
@@ -146,6 +147,7 @@ const App = () => {
           pageNum={pageNum}
           setPageNum={setPageNum}
           totalPageNum={totalPageNum}
+          loading={loading}
         />
         {loading ? (
           <ClipLoader color="#f86c6b" size={150} loading={loading} />

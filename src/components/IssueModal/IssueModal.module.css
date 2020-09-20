@@ -11,3 +11,8 @@
 .text-grey {
   color: #657786;
 }
+
+.comments-container {
+  max-width: 100%;
+  overflow-x: auto;
+}

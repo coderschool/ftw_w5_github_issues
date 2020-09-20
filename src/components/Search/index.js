@@ -1,12 +1,13 @@
 import React from "react";
 import { Form, Button, Row, Col } from "react-bootstrap";
+import styles from "./Search.module.css";
 
 const Search = ({ searchTerm, onSearch, onSearchSubmit, loading }) => {
   return (
     <Form onSubmit={onSearchSubmit}>
       <Form.Group as={Row}>
         <Form.Label htmlFor="search" column sm="2">
-          Search:
+          <p className={styles["button-red"]}>Search:</p>
         </Form.Label>
         <Col sm="8">
           <Form.Control
@@ -16,7 +17,11 @@ const Search = ({ searchTerm, onSearch, onSearchSubmit, loading }) => {
             onChange={onSearch}
           />
         </Col>
-        <Button type="submit" disabled={!searchTerm || loading}>
+        <Button
+          className={styles["button-red"]}
+          type="submit"
+          disabled={!searchTerm || loading}
+        >
           Submit
         </Button>
       </Form.Group>

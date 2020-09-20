@@ -32,13 +32,15 @@ const IssueModal = ({
           <ReactMarkdown source={issue.body} />
           <hr />
           <h4>Comments:</h4>
-          <ul className="list-unstyled">
+          <ul className="list-unstyled" style={{ "overflow-x": "auto" }}>
             {comments && comments.length ? (
               comments.map((comment) => (
                 <Comments key={comment.id} {...comment} />
               ))
             ) : (
-              <li>There are no comments of this issue</li>
+              <li>
+                {!loadingComments && "There are no comments of this issue"}
+              </li>
             )}
           </ul>
           <div className="d-flex justify-content-center">
