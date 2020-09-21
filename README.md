@@ -33,83 +33,11 @@ Practicing React with Github API to [list repository issues](https://developer.g
 
 ## Implementation
 
-### Setup project
-
-- Initialize project
-
-```bash
-$ npx create-react-app github-issues
-$ cd github-issues
-$ npm i react-bootstrap bootstrap
-$ npm i moment react-moment
-$ npm i react-markdown react-spinners
-```
-
-- Add `import "bootstrap/dist/css/bootstrap.min.css";` in `App.js`
-
-### Project structure
-
-How to structure large React apps into folders and files is a highly opinionated topic. There is no right way to do it. However, let set up conventions to structure our React projects.
-
-- Wrap your components in `components/YOUR_COMPONENT_NAME/` folder:
-
-  ```
-  |- src\
-    |- components\
-      |- List\
-          |- index.js
-          |- List.module.css
-      |- IssueModal\
-      |- Pagination\
-      |- Search\
-    |- App.js
-    ...
-  ```
-
-  ```javascript
-  // In src/components/List/index.js
-  import React from "react";
-  import styles from "./List.module.css";
-  ...
-  const List = ( ) => {
-    ...
-  }
-  export default List;
-  ```
-
-  ```javascript
-  // In src/App.js
-  import List from "./components/List";
-  ```
-
-- **[CSS Module in create-react-app](https://create-react-app.dev/docs/adding-a-css-modules-stylesheet)**: After you have setup your application with create-react-app (e.g. npx create-react-app my-app), you don't need to install anything else to make CSS modules work. However, you have to give your CSS files the "module" prefix prior the extension: e.g. `List.module.css`
-
-  ```css
-  /* In src/components/List/List.module.css */
-  .avatar {
-    width: 128px;
-    height: 128px;
-  }
-
-  .text-grey {
-    color: #657786;
-  }
-  ```
-
-  Later on in your component:
-
-  ```javascript
-  import styles from "./List.module.css";
-
-  // Then you can use css in your JSX like this
-  <span className={styles["text-grey"]}>...</span>
-
-  // If you want to concatenate with other classes
-  <span className={`${styles["text-grey"]} mr-2`}>...</span>
-
-  ```
-
-  In case of the `avatar` style, you can retrieve it with `styles.avatar` too. However, for the other styles with dashes you need to retrieve them with strings from the object, e.g. `styles["text-grey"]`. 
+* [Setup a React App](./doc/00_setup_project.md)
+* [Project Structure](./doc/01_project_structure.md)
+* [The public Navbar](./doc/10_public_navbar.md)
+* [The search form](./doc/11_search_form.md)
+* [Fetching data from Github API](./doc/12_issue_list.md)
 
 ### Step 1 - Searching and showing issues
 
