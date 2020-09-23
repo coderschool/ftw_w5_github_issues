@@ -8,7 +8,7 @@ const SearchForm = ({
   loading,
 }) => {
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} className="mb-4">
       <Form.Row>
         <Col>
           <Form.Control
@@ -29,7 +29,9 @@ const SearchForm = ({
             Searching...
           </Button>
         ) : (
-          <Button type="submit">Search</Button>
+          <Button type="submit" disabled={!searchInput}>
+            Search
+          </Button>
         )}
       </Form.Row>
     </Form>

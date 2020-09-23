@@ -1,6 +1,7 @@
 import React from "react";
-import { Navbar } from "react-bootstrap";
-import logo from "../images/logo.svg";
+import { Navbar, Nav } from "react-bootstrap";
+import logo from "images/logo.svg";
+import githubIco from "images/github_icon.png";
 
 const PublicNavbar = () => {
   return (
@@ -8,6 +9,16 @@ const PublicNavbar = () => {
       <Navbar.Brand className="mr-auto">
         <img src={logo} alt="CoderSchool" width="200px" />
       </Navbar.Brand>
+      <Nav className="mr-auto"></Nav>
+      <Nav>
+        <a
+          href="https://github.com/coderschool/ftw_w5_github_issues"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src={githubIco} alt="Github" width="32px" />
+        </a>
+      </Nav>
     </Navbar>
   );
 };
