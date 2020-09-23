@@ -62,7 +62,7 @@
 
   useEffect(() => {
     const fetchComments = async () => {
-      if (!urlFetchComments) return;
+      if (!urlFetchComments && !showModal) return;
       setLoadingComments(true);
       try {
         const response = await fetch(urlFetchComments);
@@ -90,7 +90,7 @@
       setLoadingComments(false);
     };
     fetchComments();
-  }, [urlFetchComments]);
+  }, [urlFetchComments, showModal]);
 
   // ...
 

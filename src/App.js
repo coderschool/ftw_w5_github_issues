@@ -71,7 +71,7 @@ const App = () => {
 
   useEffect(() => {
     const fetchComments = async () => {
-      if (!urlFetchComments) return;
+      if (!urlFetchComments && !showModal) return;
       setLoadingComments(true);
       try {
         const response = await fetch(urlFetchComments);
@@ -99,7 +99,7 @@ const App = () => {
       setLoadingComments(false);
     };
     fetchComments();
-  }, [urlFetchComments]);
+  }, [urlFetchComments, showModal]);
 
   useEffect(() => {
     const fetchIssueData = async () => {
