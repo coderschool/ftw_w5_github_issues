@@ -3,12 +3,12 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Alert } from "react-bootstrap";
 import PublicNavbar from "components/PublicNavbar";
-import SearchForm from "components/SearchForm";
 
 import IssueList from "components/IssueList";
 import { ClipLoader } from "react-spinners";
 import PaginationBar from "components/PaginationBar";
 import IssueModal from "components/IssueModal";
+import SearchForm from "components/SearchForm";
 
 const App = () => {
   const [searchInput, setSearchInput] = useState("facebook/react");

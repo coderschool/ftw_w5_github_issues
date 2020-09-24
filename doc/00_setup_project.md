@@ -84,3 +84,5 @@ At the Project Workspace Settings file (`Ctrl+Shift+P` -> Preferences: Open Sett
   - Go to `/puclic/index.html` replace `<link rel="icon" href="%PUBLIC_URL%/favicon.ico" />` with `<link rel="icon" href="%PUBLIC_URL%/icon.png" />`
   - In `/puclic/index.html`, change `<title>React App</title>` to `<title>your_project_name</title>`
 
+
+Good job! [Back to instructions](../README.md)
